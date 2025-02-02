@@ -6,5 +6,4 @@ class Utils
 {
 public:
 	static std::string GetCurrentDateTimeString();
-
 };

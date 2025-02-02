@@ -1,8 +1,9 @@
 #include "Game.h"
+#include <Utils/SDLUtils.h>
 #include <Logger/Logger.h>
 #include <iostream>
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_image.h>
+#include <SDL3/SDL.h>
+#include <SDL3_image/SDL_image.h>
 #include <glm/glm.hpp>
 
 glm::vec2 playerPosition;
@@ -29,25 +30,27 @@ Game::~Game()
 void Game::Initialize( bool toggleFpsCap )
 {
 	fpsCap = toggleFpsCap;
-	if ( SDL_Init( SDL_INIT_EVERYTHING ) != 0 )
+	if ( !SDLUtils::InitEverythingPC() )
 	{
 		Logger::Error( "Error initializing SDL" );
 		return;
 	}
-	SDL_DisplayMode displayMode;
-	SDL_GetCurrentDisplayMode( 0, &displayMode );
-
-	windowWidth = displayMode.w;
-	windowHeight = displayMode.h;
-
 	window = SDL_CreateWindow(
 		NULL,
-		SDL_WINDOWPOS_CENTERED,
-		SDL_WINDOWPOS_CENTERED,
-		windowWidth,
-		windowHeight,
+		0,
+		0,
 		SDL_WINDOW_BORDERLESS
 	);
+
+	const SDL_DisplayMode* displayMode = SDL_GetCurrentDisplayMode( SDL_GetDisplayForWindow( window ) );
+	if ( !displayMode )
+	{
+		Logger::Error( "Error getting display mode" );
+		return;
+	}
+
+	SDL_SetWindowPosition( window, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED );
+	SDL_SetWindowSize( window, displayMode->w, displayMode->h );
 
 	if ( !window )
 	{
@@ -55,7 +58,7 @@ void Game::Initialize( bool toggleFpsCap )
 		return;
 	}
 
-	renderer = SDL_CreateRenderer( window, -1, SDL_RENDERER_PRESENTVSYNC );
+	renderer = SDL_CreateRenderer( window, "opengl" );
 
 	if ( !renderer )
 	{
@@ -70,8 +73,6 @@ void Game::Initialize( bool toggleFpsCap )
 	message.append( currentDriver );
 
 	Logger::Log( message );
-	Logger::Warning( message );
-	Logger::Error( message );
 
 	isRunning = true;
 }
@@ -101,11 +102,11 @@ void Game::ProcessInput()
 	{
 		switch ( sdlEvent.type )
 		{
-		case SDL_QUIT:
+		case SDL_EVENT_QUIT:
 			isRunning = false;
 			break;
-		case SDL_KEYDOWN:
-			if ( sdlEvent.key.keysym.sym == SDLK_ESCAPE )
+		case SDL_EVENT_KEY_DOWN:
+			if ( sdlEvent.key.scancode == SDL_SCANCODE_ESCAPE )
 			{
 				isRunning = false;
 			}
@@ -145,17 +146,17 @@ void Game::Render()
 	// Draw a PNg texture
 	SDL_Surface* surface = IMG_Load( "./assets/images/tank-tiger-right.png" );
 	SDL_Texture* texture = SDL_CreateTextureFromSurface( renderer, surface );
-	SDL_FreeSurface( surface );
+	SDL_DestroySurface( surface );
 
 	// What is the destination rectangle that we want to place our texture/
-	SDL_Rect dstRect = {
-		static_cast<int>( playerPosition.x ),
-		static_cast<int>( playerPosition.y ),
-		32,
-		32
+	SDL_FRect dstRect = {
+		playerPosition.x,
+		playerPosition.y,
+		32.0f,
+		32.0f
 	};
 
-	SDL_RenderCopy( renderer, texture, NULL, &dstRect );
+	SDL_RenderTexture( renderer, texture, NULL, &dstRect );
 
 	SDL_DestroyTexture( texture );
 
