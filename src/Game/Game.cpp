@@ -12,14 +12,6 @@
 glm::vec2 playerPosition;
 glm::vec2 playerVelocity;
 
-
-// template<typename T, int N>
-// glm::vec2 operator * ( const glm::vec<N, float, glm::defaultp>& vector, T scalar )
-// {
-// 	return glm::vec2{ vector.x * scalar, vector.y * scalar };
-// }
-
-
 Game::Game()
 {
 	Logger::Log( "Game constructor called!" );
