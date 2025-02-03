@@ -6,12 +6,14 @@ ifeq ($(OS),Windows_NT)
 
 	EXE = .exe
 	LIB_PATH = -L"./libs/SDL3/lib" -L"./libs/lua"
+	LUA_FLAG = -llua54
 else
 	UNAME_S := $(shell uname -s)
 	RUN_CMD = ./${OUTPUT}
 
 	EXE =
 	LIB_PATH =
+	LUA_FLAG = -llua5.4
 	ifeq ($(UNAME_S),Linux)
 		OS_TYPE = linux
 	else ifeq ($(UNAME_S),Darwin)
@@ -33,7 +35,7 @@ SRC_FILES = ./src/*.cpp \
 			./src/Game/*.cpp \
 			./src/Logger/*.cpp \
 			./src/Utils/*.cpp
-LINKER_FLAGS = -lSDL3 -lSDL3_image -lSDL3_ttf -lSDL2_mixer -llua54
+LINKER_FLAGS = -lSDL3 -lSDL3_image -lSDL3_ttf -lSDL3_mixer $(LUA_FLAG)
 OBJ_NAME = gameengine
 OBJ_PATH = ./bin/
 OUTPUT = ${OBJ_PATH}$(OBJ_NAME)
