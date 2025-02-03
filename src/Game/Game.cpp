@@ -1,10 +1,13 @@
 #include "Game.h"
 #include <Utils/SDLUtils.h>
 #include <Logger/Logger.h>
-#include <iostream>
+
 #include <SDL3/SDL.h>
 #include <SDL3_image/SDL_image.h>
 #include <glm/glm.hpp>
+
+#include <iostream>
+#include <cstdio>
 
 glm::vec2 playerPosition;
 glm::vec2 playerVelocity;
@@ -39,7 +42,7 @@ void Game::Initialize( bool toggleFpsCap )
 		NULL,
 		0,
 		0,
-		SDL_WINDOW_BORDERLESS
+		SDL_WINDOW_FULLSCREEN
 	);
 
 	const SDL_DisplayMode* displayMode = SDL_GetCurrentDisplayMode( SDL_GetDisplayForWindow( window ) );
@@ -51,6 +54,12 @@ void Game::Initialize( bool toggleFpsCap )
 
 	SDL_SetWindowPosition( window, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED );
 	SDL_SetWindowSize( window, displayMode->w, displayMode->h );
+
+	char buffer[50];
+
+	sprintf( buffer, "Width: %i, height: %i", displayMode->w, displayMode->h );
+
+	Logger::Log( buffer );
 
 	if ( !window )
 	{
