@@ -40,7 +40,8 @@ INCLUDE_PATH = -I"./include" -I"./libs" -I"./src"
 SRC_FILES = ./src/*.cpp \
 			./src/Game/*.cpp \
 			./src/Logger/*.cpp \
-			./src/Utils/*.cpp
+			./src/Utils/*.cpp \
+			./src/ECS/*.cpp
 LINKER_FLAGS = -lSDL3 -lSDL3_image -lSDL3_ttf -lSDL3_mixer $(LUA_FLAG)
 OBJ_NAME = gameengine
 OBJ_PATH = ./bin/
