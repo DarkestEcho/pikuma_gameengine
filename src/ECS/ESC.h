@@ -74,8 +74,78 @@ public:
 };
 
 
-class Registry
+class IPool
 {
 public:
-	// TODO: ...
+	virtual ~IPool() = 0;
+};
+
+template<typename T>
+class Pool : public IPool
+{
+private:
+	std::vector<T> data;
+public:
+	Pool( int size = 100 )
+	{
+		data.resize( size );
+	}
+
+	virtual ~Pool() override = default;
+
+	bool IsEmpty() const
+	{
+		return data.empty();
+	}
+
+	int GetSize() const
+	{
+		return data.size();
+	}
+
+	void Resize( int n )
+	{
+		if ( n > 0 )
+		{
+			data.resize( n );
+			return;
+		}
+		Logger::Error( "Pool::Reize::Negative value passed!" );
+	}
+
+	void Clear()
+	{
+		data.clear();
+	}
+
+	void Add( T object )
+	{
+		data.push_back( object );
+	}
+
+	void Set( int index, T object )
+	{
+		data[index] = object;
+	}
+
+	T& operator []( unsigned int index )
+	{
+		return data[index];
+	}
+
+	const T& operator []( unsigned int index ) const
+	{
+		return data[index];
+	}
+};
+
+
+class Registry
+{
+private:
+	int numEntities{ 0 };
+
+	// Vector ind = component ID
+	// Pool ind = entity ID
+	std::vector<IPool*> componentPool;
 };
