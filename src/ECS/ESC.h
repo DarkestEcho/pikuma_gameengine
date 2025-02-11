@@ -2,6 +2,9 @@
 #include <bitset>
 #include <vector>
 #include <ostream>
+#include <unordered_map>
+#include <set>
+#include <typeindex>
 
 
 const unsigned int MAX_COMPONENTS = 32;
@@ -144,8 +147,24 @@ class Registry
 {
 private:
 	int numEntities{ 0 };
+	std::set<Entity> entitiesToBeAdded;
+	std::set<Entity> entitiesToBeKilled;
 
-	// Vector ind = component ID
-	// Pool ind = entity ID
+	// Vector ind == component ID
+	// Pool ind == entity ID
 	std::vector<IPool*> componentPool;
+	// Vector ind == vector id
+	// Components on/off for an entity
+	std::vector<Signature> entityComponentSignatures;
+	std::unordered_map<std::type_index, System*> systems;
+public:
+	void Update();
+
+	Entity CreateEntity();
+
+	void KillEntity( Entity entity );
+
+	void AddEntityToSystem( Entity entity );
+
+
 };

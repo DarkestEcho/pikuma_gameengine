@@ -55,7 +55,6 @@ void System::RemoveEntityFromSystem( Entity entity )
 
 const std::vector<Entity>& System::GetSystemEntities() const
 {
-	entities[8];
 	return entities;
 }
 
@@ -69,4 +68,26 @@ std::ostream& operator << ( std::ostream& os, const Entity& entity )
 {
 	os << "Entity " << entity.GetID();
 	return os;
+}
+
+Entity Registry::CreateEntity()
+{
+	int entityId = numEntities++;
+	if ( entityId >= entityComponentSignatures.size() )
+	{
+		size_t newSize = entityComponentSignatures.size() * 2;
+		entityComponentSignatures.resize( newSize );
+	}
+	Entity entity( entityId );
+	entitiesToBeAdded.insert( entity );
+	Logger::Log( "Created entity with id = " + std::to_string( entityId ) );
+	return entity;
+}
+
+void Registry::Update()
+{
+	// Add the entities that are waiting to be added to the active Systems
+	// Remove the entities that are waiting to be killed from the active Systems
+
+
 }
