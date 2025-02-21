@@ -1,13 +1,11 @@
 #include "ESC.h"
-#include <Logger/Logger.h>
-#include <algorithm>
 
 // TODO: Implement all the functions from ESC
 
 
-Entity::Entity( int id ) : id( id ) {}
+Entity::Entity( size_t id ) : id( id ) {}
 
-int Entity::GetID() const
+size_t Entity::GetID() const
 {
 	return id;
 }
@@ -72,7 +70,7 @@ std::ostream& operator << ( std::ostream& os, const Entity& entity )
 
 Entity Registry::CreateEntity()
 {
-	int entityId = numEntities++;
+	size_t entityId = numEntities++;
 	if ( entityId >= entityComponentSignatures.size() )
 	{
 		size_t newSize = entityComponentSignatures.size() * 2;
@@ -80,7 +78,7 @@ Entity Registry::CreateEntity()
 	}
 	Entity entity( entityId );
 	entitiesToBeAdded.insert( entity );
-	Logger::Log( "Created entity with id = " + std::to_string( entityId ) );
+	Logger::Log( ( "Created entity with id = " + std::to_string( entityId ) ) );
 	return entity;
 }
 
