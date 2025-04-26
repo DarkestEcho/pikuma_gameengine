@@ -3,6 +3,7 @@
 ifeq ($(OS),Windows_NT)
 	OS_TYPE = windows
 	RUN_CMD = ${OUTPUT}$(EXE)
+	MAKE_CMD = mingw32-make
 
 	EXE = .exe
 	LIB_PATH = -L"./libs/SDL3/lib" -L"./libs/lua"
@@ -13,6 +14,7 @@ ifeq ($(OS),Windows_NT)
 else
 	UNAME_S := $(shell uname -s)
 	RUN_CMD = ./${OUTPUT}
+	MAKE_CMD = make
 
 	EXE =
 	LIB_PATH =
@@ -45,7 +47,7 @@ SRC_FILES = ./src/*.cpp \
 LINKER_FLAGS = -lSDL3 -lSDL3_image -lSDL3_ttf -lSDL3_mixer $(LUA_FLAG)
 OBJ_NAME = gameengine
 OBJ_PATH = ./bin/
-OUTPUT = ${OBJ_PATH}$(OBJ_NAME)
+OUTPUT = $(OBJ_PATH)$(OBJ_NAME)
 
 
 # Variables end
@@ -62,7 +64,7 @@ run:
 	$(RUN_CMD)
 
 brun:
-	make && make run
+	$(MAKE_CMD) && $(MAKE_CMD) run
 
 clean:
-	rm -rf ${OBJ_PATH}
+	rm -rf $(OBJ_PATH)
