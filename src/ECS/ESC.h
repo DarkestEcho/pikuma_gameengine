@@ -159,7 +159,7 @@ private:
 	// Vector ind == component ID
 	// Pool ind == entity ID
 	std::vector<IPool*> componentPools;
-	// Vector ind == vector id
+	// Vector ind == entity id
 	// Components on/off for an entity
 	std::vector<Signature> entityComponentSignatures;
 	std::unordered_map<std::type_index, System*> systems;
@@ -193,5 +193,23 @@ public:
 		TComponent newComponent{ std::forward<TArgs>( args )... };
 		componentPool->Set( entityId, newComponent );
 		entityComponentSignatures[entityId].set( componentId );
+	}
+
+	template<typename TComponent>
+	void RemoveComponent( Entity entity )
+	{
+		const size_t entityId = entity.GetID();
+		const size_t componentId = Component<TComponent>::GetId();
+
+		entityComponentSignatures[entityId].set( componentId, false );
+	}
+
+	template<typename TComponent>
+	bool HasComponent( Entity entity )
+	{
+		const size_t entityId = entity.GetID();
+		const size_t componentId = Component<TComponent>::GetID();
+
+		return entityComponentSignatures[entityId].test( componentId );
 	}
 };
