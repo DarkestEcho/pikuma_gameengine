@@ -2,6 +2,7 @@
 
 // TODO: Implement all the functions from ESC
 
+size_t IComponent::nextId = 0;
 
 Entity::Entity( size_t id ) : id( id ) {}
 
