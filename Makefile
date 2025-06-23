@@ -4,6 +4,7 @@ ifeq ($(OS),Windows_NT)
 	OS_TYPE = windows
 	RUN_CMD = ${OUTPUT}$(EXE)
 	MAKE_CMD = mingw32-make
+	COPY_CMD = xcopy //E //I //D //Y
 
 	EXE = .exe
 	LIB_PATH = -L"./libs/SDL3/lib" -L"./libs/lua"
@@ -15,6 +16,7 @@ else
 	UNAME_S := $(shell uname -s)
 	RUN_CMD = ./${OUTPUT}
 	MAKE_CMD = make
+	COPY_CMD = cp -r
 
 	EXE =
 	LIB_PATH =
@@ -54,11 +56,11 @@ OUTPUT = $(OBJ_PATH)$(OBJ_NAME)
 
 build:
 	mkdir -p $(OBJ_PATH)
-	make copy_assets
+	$(MAKE_CMD) copy_assets
 	$(CC) $(COMPILER_FLAGS) $(LANG_STD) $(INCLUDE_PATH) $(SRC_FILES) ${LIB_PATH} $(LINKER_FLAGS) -o ${OUTPUT}$(EXE)
 
 copy_assets:
-	xcopy //E //I //D //Y $(ASSETS_SRC) $(ASSETS_DEST)
+	${COPY_CMD} $(ASSETS_SRC) $(ASSETS_DEST)
 
 run:
 	$(RUN_CMD)
