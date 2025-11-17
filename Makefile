@@ -4,14 +4,13 @@ ifeq ($(OS),Windows_NT)
 	OS_TYPE = windows
 	RUN_CMD = ${OUTPUT}$(EXE)
 	MAKE_CMD = mingw32-make
-	COPY_CMD = xcopy //E //I //D //Y
+	COPY_CMD = xcopy /E /I /D /Y
 
 	EXE = .exe
 	LIB_PATH = -L"./libs/SDL3/lib" -L"./libs/lua"
 	LUA_FLAG = -llua54
-
-	ASSETS_SRC  =assets
-	ASSETS_DEST =bin\\assets\\
+	ASSETS_SRC  = assets
+	ASSETS_DEST = bin\\assets\\
 else
 	UNAME_S := $(shell uname -s)
 	RUN_CMD = ./${OUTPUT}
