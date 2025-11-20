@@ -4,7 +4,7 @@
 
 int main( int argc, char* argv[] )
 {
-	std::cout << "Hey" << std::endl;
+	std::cout << "main entry" << std::endl;
 	Game game;
 
 	game.Initialize( true );

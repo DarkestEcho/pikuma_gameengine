@@ -9,6 +9,7 @@
 
 #include <iostream>
 #include <cstdio>
+#include <format>
 
 Game::Game()
 {
@@ -74,17 +75,21 @@ void Game::Initialize( bool toggleFpsCap )
 	Logger::Log( message );
 
 	isRunning = true;
+
+	Logger::Log( "Game::Initialize::Completed" );
 }
 
 void Game::Run()
 {
 	Setup();
+	Logger::Log( "Game::Initialize::Started" );
 	while ( isRunning )
 	{
 		ProcessInput();
 		Update();
 		Render();
 	}
+	Logger::Log( "Game::Run::Completed" );
 }
 
 void Game::Setup()
@@ -94,6 +99,7 @@ void Game::Setup()
 	// tank.AddComponent<TransformComponent>();
 	// tahk.AddComponent<BoxColliderComponent>();
 	// tank.AddComponent<SpriteComponent>("./assets/images/tank-tiger-right.png");
+	Logger::Log( "Game::Setup::Completed" );
 }
 
 void Game::ProcessInput()
@@ -133,7 +139,7 @@ void Game::Update()
 	}
 
 	// Difference in ticks since the last frame in seconds
-	float deltaTime = ( SDL_GetTicks() - millisecsPreviousFrame ) / 1000.0f;
+	//float deltaTime = ( SDL_GetTicks() - millisecsPreviousFrame ) / 1000.0f;
 
 	millisecsPreviousFrame = SDL_GetTicks();
 
