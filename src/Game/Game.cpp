@@ -1,7 +1,7 @@
 #include "Game.h"
 #include <Utils/SDLUtils.h>
 #include <Logger/Logger.h>
-#include <ECS/ESC.h>
+#include <ECS/ECS.h>
 
 #include <SDL3/SDL.h>
 #include <SDL3_image/SDL_image.h>

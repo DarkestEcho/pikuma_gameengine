@@ -269,5 +269,5 @@ bool Registry::HasSystem()
 template<typename TSystem>
 TSystem& Registry::GetSystem()
 {
-	return static_cast<TSystem&>( *systems.at( std::type_index( typeid( TSystem ) ) );
+	return static_cast<TSystem&>( *systems.at( std::type_index( typeid( TSystem ) ) ) );
 }
