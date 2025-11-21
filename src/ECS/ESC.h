@@ -7,6 +7,7 @@
 #include <set>
 #include <typeindex>
 #include <algorithm>
+#include <memory>
 
 
 const size_t MAX_COMPONENTS = 32;
@@ -198,7 +199,9 @@ public:
 	bool HasSystem();
 
 	template<typename TSystem>
-	void GetSystem();
+	TSystem& GetSystem();
+
+	void AddEntityToSystems( Entity entity );
 };
 
 
@@ -253,17 +256,18 @@ void Registry::AddSystem( TArgs && ...args )
 template<typename TSystem>
 void Registry::RemoveSystem()
 {
+	std::unordered_map<std::type_index, System*>::iterator system = systems.find( std::type_index( typeid( TSystem ) ) );
+	systems.erase( system );
 }
 
 template<typename TSystem>
 bool Registry::HasSystem()
 {
-	return false;
+	return systems.find( std::type_index( typeid( TSystem ) ) ) != systems.end();
 }
 
 template<typename TSystem>
-void Registry::GetSystem()
+TSystem& Registry::GetSystem()
 {
-	// TODO: insert return statement here
+	return static_cast<TSystem&>( *systems.at( std::type_index( typeid( TSystem ) ) );
 }
-

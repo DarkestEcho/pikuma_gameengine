@@ -83,6 +83,24 @@ Entity Registry::CreateEntity()
 	return entity;
 }
 
+void Registry::AddEntityToSystems( Entity entity )
+{
+	const size_t entityId = entity.GetID();
+	const Signature& entityComponentSignature = entityComponentSignatures[entityId];
+
+	for ( const auto& [key, system] : systems )
+	{
+		const Signature& systemComponentSignature = system->GetComponentSignature();
+
+		bool isInterested = ( entityComponentSignature & systemComponentSignature ) == systemComponentSignature;
+
+		if ( isInterested )
+		{
+			system->AddEntityToSystem( entity );
+		}
+	}
+}
+
 void Registry::Update()
 {
 	// Add the entities that are waiting to be added to the active Systems
