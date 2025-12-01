@@ -1,7 +1,7 @@
 #pragma once
 
 #include <glm/glm.hpp>
-#include <ECS/ESC.h>
+#include <ECS/ECS.h>
 
 struct TransformComponent : public Component<TransformComponent>
 {
