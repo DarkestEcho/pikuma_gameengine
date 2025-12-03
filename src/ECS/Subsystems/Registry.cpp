@@ -13,7 +13,7 @@ Entity Registry::CreateEntity()
 	}
 	Entity entity( entityId );
 	entitiesToBeAdded.insert( entity );
-	Logger::Log( ( "Created entity with id = " + std::to_string( entityId ) ) );
+	Logger::Log( ( "Created entity with id: " + std::to_string( entityId ) ) );
 	return entity;
 }
 
@@ -38,7 +38,12 @@ void Registry::AddEntityToSystems( Entity entity )
 void Registry::Update()
 {
 	// Add the entities that are waiting to be added to the active Systems
+	for ( Entity entity : entitiesToBeAdded )
+	{
+		AddEntityToSystems( entity );
+	}
+
+	entitiesToBeAdded.clear();
+
 	// Remove the entities that are waiting to be killed from the active Systems
-
-
 }

@@ -39,7 +39,7 @@ endif
 CC = g++
 LANG_STD = -std=c++20
 COMPILER_FLAGS = -Wall -Wfatal-errors
-INCLUDE_PATH = -I"./include" -I"./libs" -I"./src" -I"./src/ECS" -I"./src/ECS/Subsystems"
+INCLUDE_PATH = -I"./include" -I"./libs" -I"./src" -I"./src/ECS/Subsystems"
 SRC_FILES = ./src/*.cpp \
 			./src/Game/*.cpp \
 			./src/Logger/*.cpp \

@@ -1,4 +1,6 @@
 #pragma once
+#include <memory>
+#include <ECS/ECS.h>
 
 class SDL_Window;
 class SDL_Renderer;
@@ -14,6 +16,8 @@ private:
 	int millisecsPreviousFrame{ 0 };
 	SDL_Window* window;
 	SDL_Renderer* renderer;
+
+	std::unique_ptr<Registry> registry{ std::make_unique<Registry>() };
 
 public:
 	Game();

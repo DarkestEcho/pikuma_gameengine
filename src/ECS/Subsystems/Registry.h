@@ -3,6 +3,7 @@
 #include <vector>
 #include <unordered_map>
 #include <typeindex>
+#include <memory>
 #include <Types/Core.h>
 #include <Types/Pool.h>
 #include <Entity.h>
@@ -17,12 +18,12 @@ private:
 
 	//Vector ind == component ID
 	//Pool ind == entity ID
-	std::vector<IPool*> componentPools;
+	std::vector<std::shared_ptr<IPool>> componentPools;
 
 	//Vector ind == entity id
 	//Components on/off for an entity
 	std::vector<Signature> entityComponentSignatures;
-	std::unordered_map<std::type_index, System*> systems;
+	std::unordered_map<std::type_index, std::shared_ptr<System>> systems;
 public:
 	void Update();
 
@@ -71,11 +72,11 @@ void Registry::AddComponent( Entity entity, TArgs&& ...args )
 
 	if ( !componentPools[componentId] )
 	{
-		Pool<TComponent>* newComponentPool = new Pool<TComponent>();
+		std::shared_ptr<Pool<TComponent>> newComponentPool = std::make_shared<Pool<TComponent>>();
 		componentPools[componentId] = newComponentPool;
 	}
 
-	Pool<TComponent>* componentPool = componentPools[componentId];
+	std::shared_ptr<Pool<TComponent>> componentPool = componentPools[componentId];
 	TComponent newComponent{ std::forward<TArgs>( args )... };
 	componentPool->Set( entityId, newComponent );
 	entityComponentSignatures[entityId].set( componentId );
@@ -102,14 +103,14 @@ bool Registry::HasComponent( Entity entity )
 template<typename TSystem, typename ...TArgs>
 void Registry::AddSystem( TArgs && ...args )
 {
-	TSystem* newSystem = new TSystem( std::forward<TArgs>( args )... );
+	std::shared_ptr<TSystem> newSystem = std::make_shared<TSystem>( std::forward<TArgs>( args )... );
 	systems[std::type_index( typeid( TSystem ) )] = newSystem;
 }
 
 template<typename TSystem>
 void Registry::RemoveSystem()
 {
-	std::unordered_map<std::type_index, System*>::iterator system = systems.find( std::type_index( typeid( TSystem ) ) );
+	std::unordered_map<std::type_index, std::shared_ptr<System>>::iterator system = systems.find( std::type_index( typeid( TSystem ) ) );
 	systems.erase( system );
 }
 
@@ -122,5 +123,5 @@ bool Registry::HasSystem()
 template<typename TSystem>
 TSystem& Registry::GetSystem()
 {
-	return static_cast<TSystem&>( *systems.at( std::type_index( typeid( TSystem ) ) ) );
+	return std::static_pointer_cast<TSystem&>( *systems.at( std::type_index( typeid( TSystem ) ) ) );
 }

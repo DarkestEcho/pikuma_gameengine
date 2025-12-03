@@ -1,7 +1,6 @@
 #include "Game.h"
 #include <Utils/SDLUtils.h>
 #include <Logger/Logger.h>
-#include <ECS/ECS.h>
 
 #include <SDL3/SDL.h>
 #include <SDL3_image/SDL_image.h>
@@ -99,6 +98,9 @@ void Game::Setup()
 	// tank.AddComponent<TransformComponent>();
 	// tahk.AddComponent<BoxColliderComponent>();
 	// tank.AddComponent<SpriteComponent>("./assets/images/tank-tiger-right.png");
+
+	Entity tank = registry->CreateEntity();
+	Entity truck = registry->CreateEntity();
 	Logger::Log( "Game::Setup::Completed" );
 }
 
