@@ -5,7 +5,7 @@
 class IPool
 {
 public:
-	virtual ~IPool() = 0;
+	virtual ~IPool() = default;
 };
 
 template<typename T>

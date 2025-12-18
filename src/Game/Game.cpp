@@ -1,6 +1,8 @@
 #include "Game.h"
 #include <Utils/SDLUtils.h>
 #include <Logger/Logger.h>
+#include <Components/TransformComponent.h>
+#include <Components/RigidBodyComponent.h>
 
 #include <SDL3/SDL.h>
 #include <SDL3_image/SDL_image.h>
@@ -100,7 +102,8 @@ void Game::Setup()
 	// tank.AddComponent<SpriteComponent>("./assets/images/tank-tiger-right.png");
 
 	Entity tank = registry->CreateEntity();
-	Entity truck = registry->CreateEntity();
+	registry->AddComponent<TransformComponent>( tank, glm::vec2( 10.0f, 30.0f ), glm::vec2( 1.0f, 1.0f ), 0.0f );
+	registry->AddComponent<RigidBodyComponent>( tank, glm::vec2( 50.0f, 0.0f ) );
 	Logger::Log( "Game::Setup::Completed" );
 }
 

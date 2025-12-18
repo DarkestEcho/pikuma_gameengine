@@ -8,7 +8,7 @@ Entity Registry::CreateEntity()
 	size_t entityId = numEntities++;
 	if ( entityId >= entityComponentSignatures.size() )
 	{
-		size_t newSize = entityComponentSignatures.size() * 2;
+		size_t newSize = ( entityId + 1 ) * 2;
 		entityComponentSignatures.resize( newSize );
 	}
 	Entity entity( entityId );

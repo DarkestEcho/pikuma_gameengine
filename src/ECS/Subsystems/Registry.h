@@ -76,10 +76,11 @@ void Registry::AddComponent( Entity entity, TArgs&& ...args )
 		componentPools[componentId] = newComponentPool;
 	}
 
-	std::shared_ptr<Pool<TComponent>> componentPool = componentPools[componentId];
-	TComponent newComponent{ std::forward<TArgs>( args )... };
+	std::shared_ptr<Pool<TComponent>> componentPool = std::static_pointer_cast<Pool<TComponent>>( componentPools[componentId] );
+	TComponent newComponent( std::forward<TArgs>( args )... );
 	componentPool->Set( entityId, newComponent );
 	entityComponentSignatures[entityId].set( componentId );
+	Logger::Log( "Component:Id:" + std::to_string( componentId ) + " was added to Entity:Id:" + std::to_string( entityId ) );
 }
 
 template<typename TComponent>
