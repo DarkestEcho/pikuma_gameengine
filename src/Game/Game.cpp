@@ -15,6 +15,7 @@
 Game::Game()
 {
 	Logger::Log( "Game constructor called!" );
+	Entity::SetRegistry(registry.get());
 }
 
 Game::~Game()
@@ -102,8 +103,8 @@ void Game::Setup()
 	// tank.AddComponent<SpriteComponent>("./assets/images/tank-tiger-right.png");
 
 	Entity tank = registry->CreateEntity();
-	registry->AddComponent<TransformComponent>( tank, glm::vec2( 10.0f, 30.0f ), glm::vec2( 1.0f, 1.0f ), 0.0f );
-	registry->AddComponent<RigidBodyComponent>( tank, glm::vec2( 50.0f, 0.0f ) );
+	tank.AddComponent<TransformComponent>( glm::vec2( 10.0f, 30.0f ), glm::vec2( 1.0f, 1.0f ), 0.0f );
+	tank.AddComponent<RigidBodyComponent>( glm::vec2( 50.0f, 0.0f ) );
 	Logger::Log( "Game::Setup::Completed" );
 }
 
