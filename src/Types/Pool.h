@@ -60,6 +60,11 @@ public:
 		data[index] = object;
 	}
 
+	T& Get( size_t index )
+	{
+		return static_cast<T&>( data[index] );
+	}
+
 	T& operator []( size_t index )
 	{
 		return data[index];

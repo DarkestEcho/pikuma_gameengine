@@ -37,7 +37,7 @@ public:
 	Entity( size_t id );
 	Entity( const Entity& entity ) = default;
 
-	static void SetRegistry(Registry* newRegistry);
+	static void SetRegistry( Registry* newRegistry );
 
 	size_t GetId() const;
 
@@ -49,7 +49,7 @@ public:
 	std::ostream& operator << ( std::ostream& os );
 
 	template<typename TComponent, typename ...TArgs>
-	void AddComponent(TArgs&& ...args);
+	void AddComponent( TArgs&& ...args );
 
 	template<typename TComponent>
 	void RemoveComponent();
@@ -69,6 +69,11 @@ private:
 	Signature componentSignature;
 	// List of all entities that the system is interested in
 	std::vector<Entity> entities;
+
+protected:
+	template <typename TComponent>
+	void RequireComponent();
+
 public:
 	System() = default;
 	virtual ~System() = default;
@@ -82,9 +87,6 @@ public:
 	const std::vector<Entity>& GetSystemEntities() const;
 
 	const Signature& GetComponentSignature() const;
-
-	template <typename TComponent>
-	void RequireComponent();
 };
 
 
@@ -104,6 +106,11 @@ private:
 	std::vector<Signature> entityComponentSignatures;
 	std::unordered_map<std::type_index, std::shared_ptr<System>> systems;
 public:
+	Registry()
+	{
+		Entity::SetRegistry( this );
+	}
+
 	void Update();
 
 	Entity CreateEntity();
@@ -173,6 +180,7 @@ void Registry::RemoveComponent( Entity entity )
 	const size_t componentId = Component<TComponent>::GetId();
 
 	entityComponentSignatures[entityId].set( componentId, false );
+	Logger::Log( "Component:Id:" + std::to_string( componentId ) + " was removed from Entity:Id:" + std::to_string( entityId ) );
 }
 
 template<typename TComponent>
@@ -216,33 +224,33 @@ bool Registry::HasSystem()
 template<typename TSystem>
 TSystem& Registry::GetSystem()
 {
-	return std::static_pointer_cast<TSystem&>( *systems.at( std::type_index( typeid( TSystem ) ) ) );
+	return *std::static_pointer_cast<TSystem>( systems.at( std::type_index( typeid( TSystem ) ) ) );
 }
 #pragma endregion // -----> REGISTRY END        
 
 #pragma region // -----> ENTITY        
 template<typename TComponent, typename ...TArgs>
-void Entity::AddComponent(TArgs&& ...args)
+void Entity::AddComponent( TArgs&& ...args )
 {
-	Entity::registry->AddComponent<TComponent>(*this, std::forward<TArgs>(args)...);
+	Entity::registry->AddComponent<TComponent>( *this, std::forward<TArgs>( args )... );
 }
 
 template<typename TComponent>
 void Entity::RemoveComponent()
 {
-	Entity::registry->RemoveComponent<TComponent>(*this);
+	Entity::registry->RemoveComponent<TComponent>( *this );
 }
 
 template<typename TComponent>
 bool Entity::HasComponent()
 {
-	return Entity::registry->HasComponent<TComponent>(*this);
+	return Entity::registry->HasComponent<TComponent>( *this );
 }
 
 template<typename TComponent>
 TComponent& Entity::GetComponent()
 {
-	return Entity::registry->GetComponent<TComponent>(*this);
+	return Entity::registry->GetComponent<TComponent>( *this );
 }
 #pragma endregion // -----> ENTITY END        
 

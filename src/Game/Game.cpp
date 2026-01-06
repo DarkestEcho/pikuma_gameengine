@@ -3,6 +3,9 @@
 #include <Logger/Logger.h>
 #include <Components/TransformComponent.h>
 #include <Components/RigidBodyComponent.h>
+#include <Components/SpriteComponent.h>
+#include <Systems/MovementSystem.h>
+#include <Systems/RenderSystem.h>
 
 #include <SDL3/SDL.h>
 #include <SDL3_image/SDL_image.h>
@@ -15,7 +18,6 @@
 Game::Game()
 {
 	Logger::Log( "Game constructor called!" );
-	Entity::SetRegistry(registry.get());
 }
 
 Game::~Game()
@@ -101,10 +103,19 @@ void Game::Setup()
 	// tank.AddComponent<TransformComponent>();
 	// tahk.AddComponent<BoxColliderComponent>();
 	// tank.AddComponent<SpriteComponent>("./assets/images/tank-tiger-right.png");
+	registry->AddSystem<MovementSystem>();
+	registry->AddSystem<RenderSystem>();
 
 	Entity tank = registry->CreateEntity();
 	tank.AddComponent<TransformComponent>( glm::vec2( 10.0f, 30.0f ), glm::vec2( 1.0f, 1.0f ), 0.0f );
-	tank.AddComponent<RigidBodyComponent>( glm::vec2( 50.0f, 0.0f ) );
+	tank.AddComponent<RigidBodyComponent>( glm::vec2( 80.0f, 0.0f ) );
+	tank.AddComponent<SpriteComponent>( 10.0f, 10.0f );
+
+	Entity truck = registry->CreateEntity();
+	truck.AddComponent<TransformComponent>( glm::vec2( 20.0f, 80.0f ), glm::vec2( 1.0f, 1.0f ), 0.0f );
+	truck.AddComponent<RigidBodyComponent>( glm::vec2( 0.0f, 180.0f ) );
+	truck.AddComponent<SpriteComponent>( 20.0f, 100.0f );
+
 	Logger::Log( "Game::Setup::Completed" );
 }
 
@@ -145,14 +156,13 @@ void Game::Update()
 	}
 
 	// Difference in ticks since the last frame in seconds
-	//float deltaTime = ( SDL_GetTicks() - millisecsPreviousFrame ) / 1000.0f;
+	float deltaTime = ( SDL_GetTicks() - millisecsPreviousFrame ) / 1000.0f;
 
 	millisecsPreviousFrame = SDL_GetTicks();
 
-	// TODO:
-	// MovementSystem.Update(deltaTime);
-	// CollisionSystem.Update(deltaTime);
-	// DamageSystem.Update(deltaTime);
+	registry->GetSystem<MovementSystem>().Update( deltaTime );
+
+	registry->Update();
 }
 
 void Game::Render()
@@ -160,6 +170,7 @@ void Game::Render()
 	SDL_SetRenderDrawColor( renderer, 21, 21, 21, 255 );
 	SDL_RenderClear( renderer );
 
+	registry->GetSystem<RenderSystem>().Update( renderer );
 	// TODO: Render game objects
 
 	SDL_RenderPresent( renderer );
