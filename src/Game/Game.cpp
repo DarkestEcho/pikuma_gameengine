@@ -106,15 +106,18 @@ void Game::Setup()
 	registry->AddSystem<MovementSystem>();
 	registry->AddSystem<RenderSystem>();
 
+	assetStore->AddTexture( renderer, "tank-image", "./assets/images/tank-panther-right.png" );
+	assetStore->AddTexture( renderer, "truck-image", "./assets/images/truck-ford-right.png" );
+
 	Entity tank = registry->CreateEntity();
 	tank.AddComponent<TransformComponent>( glm::vec2( 10.0f, 30.0f ), glm::vec2( 1.0f, 1.0f ), 0.0f );
 	tank.AddComponent<RigidBodyComponent>( glm::vec2( 80.0f, 0.0f ) );
-	tank.AddComponent<SpriteComponent>( 10.0f, 10.0f );
+	tank.AddComponent<SpriteComponent>( "tank-image", 10.0f, 10.0f );
 
 	Entity truck = registry->CreateEntity();
 	truck.AddComponent<TransformComponent>( glm::vec2( 20.0f, 80.0f ), glm::vec2( 1.0f, 1.0f ), 0.0f );
 	truck.AddComponent<RigidBodyComponent>( glm::vec2( 0.0f, 180.0f ) );
-	truck.AddComponent<SpriteComponent>( 20.0f, 100.0f );
+	truck.AddComponent<SpriteComponent>( "truck-image", 20.0f, 100.0f );
 
 	Logger::Log( "Game::Setup::Completed" );
 }

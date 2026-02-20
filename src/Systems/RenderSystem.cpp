@@ -16,10 +16,5 @@ void RenderSystem::Update( SDL_Renderer* renderer )
 	{
 		const TransformComponent& transform = entity.GetComponent<TransformComponent>();
 		const SpriteComponent& spriteComponent = entity.GetComponent<SpriteComponent>();
-
-		const SDL_FRect objRect{ transform.position.x, transform.position.y, spriteComponent.width, spriteComponent.height };
-
-		SDL_SetRenderDrawColor( renderer, 255, 255, 255, 255 );
-		SDL_RenderFillRect( renderer, &objRect );
 	}
 }

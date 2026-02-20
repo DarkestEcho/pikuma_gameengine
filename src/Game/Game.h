@@ -1,6 +1,7 @@
 #pragma once
 #include <memory>
 #include <ECS/ECS.h>
+#include <AssetStore/AssetStore.h>
 
 class SDL_Window;
 class SDL_Renderer;
@@ -18,7 +19,7 @@ private:
 	SDL_Renderer* renderer;
 
 	std::unique_ptr<Registry> registry{ std::make_unique<Registry>() };
-
+	std::unique_ptr<AssetStore> assetStore{ std::make_unique<AssetStore>() };
 public:
 	Game();
 	~Game();
