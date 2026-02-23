@@ -110,14 +110,14 @@ void Game::Setup()
 	assetStore->AddTexture( renderer, "truck-image", "./assets/images/truck-ford-right.png" );
 
 	Entity tank = registry->CreateEntity();
-	tank.AddComponent<TransformComponent>( glm::vec2( 10.0f, 30.0f ), glm::vec2( 1.0f, 1.0f ), 0.0f );
+	tank.AddComponent<TransformComponent>( glm::vec2( 10.0f, 30.0f ), glm::vec2( 1.0f, 1.0f ), 0.0 );
 	tank.AddComponent<RigidBodyComponent>( glm::vec2( 80.0f, 0.0f ) );
-	tank.AddComponent<SpriteComponent>( "tank-image", 10.0f, 10.0f );
+	tank.AddComponent<SpriteComponent>( "tank-image", 32.0f, 32.0f, 0.0f, 0.0f );
 
 	Entity truck = registry->CreateEntity();
-	truck.AddComponent<TransformComponent>( glm::vec2( 20.0f, 80.0f ), glm::vec2( 1.0f, 1.0f ), 0.0f );
+	truck.AddComponent<TransformComponent>( glm::vec2( 20.0f, 80.0f ), glm::vec2( 1.0f, 1.0f ), 0.0 );
 	truck.AddComponent<RigidBodyComponent>( glm::vec2( 0.0f, 180.0f ) );
-	truck.AddComponent<SpriteComponent>( "truck-image", 20.0f, 100.0f );
+	truck.AddComponent<SpriteComponent>( "truck-image", 32.0f, 32.0f, 0.0f, 0.0f );
 
 	Logger::Log( "Game::Setup::Completed" );
 }
@@ -173,7 +173,7 @@ void Game::Render()
 	SDL_SetRenderDrawColor( renderer, 21, 21, 21, 255 );
 	SDL_RenderClear( renderer );
 
-	registry->GetSystem<RenderSystem>().Update( renderer );
+	registry->GetSystem<RenderSystem>().Update( renderer, *assetStore );
 	// TODO: Render game objects
 
 	SDL_RenderPresent( renderer );
