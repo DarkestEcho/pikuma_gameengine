@@ -1,5 +1,6 @@
 #include "Game.h"
 #include <Utils/SDLUtils.h>
+#include <Utils/Utils.h>
 #include <Logger/Logger.h>
 #include <Components/TransformComponent.h>
 #include <Components/RigidBodyComponent.h>
@@ -108,6 +109,15 @@ void Game::Setup()
 
 	assetStore->AddTexture( renderer, "tank-image", "./assets/images/tank-panther-right.png" );
 	assetStore->AddTexture( renderer, "truck-image", "./assets/images/truck-ford-right.png" );
+	assetStore->AddTexture( renderer, "tilemap_image", "./assets/images/jungle.png" );
+
+	std::vector<Tile> tiles = Utils::GetTilesFromMapFile( "./assets/tilemaps/jungle.map" );
+	for ( Tile tile : tiles )
+	{
+		Entity tileEntity = registry->CreateEntity();
+		tileEntity.AddComponent<TransformComponent>( static_cast<glm::vec2>( tile.position ), glm::vec2( Tile::scale, Tile::scale ), 0.0 );
+		tileEntity.AddComponent<SpriteComponent>( "tilemap_image", Tile::size.x, Tile::size.y, tile.source.x * Tile::size.x, tile.source.y * Tile::size.y );
+	}
 
 	Entity tank = registry->CreateEntity();
 	tank.AddComponent<TransformComponent>( glm::vec2( 10.0f, 30.0f ), glm::vec2( 1.0f, 1.0f ), 0.0 );

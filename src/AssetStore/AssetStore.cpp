@@ -39,6 +39,7 @@ void AssetStore::ClearTextures()
 void AssetStore::AddTexture( SDL_Renderer* renderer, const std::string& assetId, const std::string& filePath )
 {
 	SDL_Texture* texture = IMG_LoadTexture( renderer, filePath.c_str() );
+	SDL_SetTextureScaleMode( texture, SDL_SCALEMODE_NEAREST );
 
 	textures.emplace( assetId, texture );
 

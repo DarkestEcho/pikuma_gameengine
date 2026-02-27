@@ -11,7 +11,7 @@ struct TransformComponent : public Component<TransformComponent>
 
 	TransformComponent() = default;
 
-	TransformComponent( glm::vec2 position, glm::vec2 scale, float rotation )
+	TransformComponent( glm::vec2 position, glm::vec2 scale, double rotation )
 		: position( position ), scale( scale ), rotation( rotation )
 	{
 	}

@@ -1,5 +1,10 @@
 #include "Utils.h"
+#include <Logger/Logger.h>
 #include <chrono>
+#include <fstream>
+#include <stdexcept>
+#include <sstream>
+#include <iostream>
 
 std::string Utils::GetCurrentDateTimeString()
 {
@@ -8,4 +13,63 @@ std::string Utils::GetCurrentDateTimeString()
 
 	std::string dateTime = std::format( "{:%Y-%m-%d %H:%M:%S}", time );
 	return dateTime;
+}
+
+std::vector<Tile> Utils::GetTilesFromMapFile( std::string_view filePath )
+{
+	std::ifstream mapFile( filePath.data() );
+	if ( !mapFile.is_open() )
+	{
+		Logger::Error( "MAP::LOADING::FILE_ERROR:" + std::string( filePath ) );
+		throw std::invalid_argument( filePath.data() );
+	}
+
+	std::string line;
+
+	std::getline( mapFile, line );
+
+	std::stringstream ss( line );
+
+	//FIXME - Need some validation for map file before any actions
+
+	unsigned int tempUint;
+	//---> Fill basic Tile info
+	ss >> tempUint;
+	Tile::size.x = tempUint;
+	ss.ignore();
+	ss >> tempUint;
+	Tile::size.y = tempUint;
+	ss.ignore();
+	ss >> Tile::scale;
+
+	Logger::Log( "TILE_INFO::width: " + std::to_string( Tile::size.x ) +
+		", height: " + std::to_string( Tile::size.y ) +
+		", scale: " + std::to_string( Tile::scale ) );
+
+	std::vector<Tile> tiles;
+
+	uint16_t y = 0;
+
+	while ( std::getline( mapFile, line ) )
+	{
+		//TODO - Output values
+		ss.str( line );
+		ss.clear();
+		std::string cell;
+		uint16_t x = 0;
+
+		while ( std::getline( ss, cell, ',' ) )
+		{
+			tiles.emplace_back(
+				glm::u16vec2( static_cast<uint16_t>( x * Tile::size.x * Tile::scale ), static_cast<uint16_t>( y * Tile::size.y * Tile::scale ) ),
+				glm::u8vec2( static_cast<uint8_t>( cell[1] - '0' ), static_cast<uint8_t>( cell[0] - '0' ) )
+			);
+			x++;
+		}
+		y++;
+	}
+
+	mapFile.close();
+
+	return tiles;
 }
