@@ -9,7 +9,7 @@ class Utils
 {
 public:
 	static std::string GetCurrentDateTimeString();
-	static std::vector<Tile> GetTilesFromMapFile( std::string_view filePath );
+	static Map LoadMapFromFile( std::string_view filePath );
 
 	static void CheckIsZIndexCorrect( uint8_t zIndex );
 

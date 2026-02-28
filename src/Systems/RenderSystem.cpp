@@ -23,6 +23,12 @@ void RenderSystem::Update( SDL_Renderer* renderer, const AssetStore& assetStore 
 	}
 }
 
+void RenderSystem::SetOffsets( float x, float y )
+{
+	xOffset = x;
+	yOffset = y;
+}
+
 void RenderSystem::AddEntityToSystem( const Entity& entity )
 {
 	System::AddEntityToSystem( entity );
@@ -44,8 +50,8 @@ void RenderSystem::RenderEntity( Entity entity, SDL_Renderer* renderer, const As
 	};
 
 	SDL_FRect distanationRectangle{
-		transform.position.x,
-		transform.position.y,
+		transform.position.x + xOffset,
+		transform.position.y + yOffset,
 		spriteComponent.width * transform.scale.x,
 		spriteComponent.height * transform.scale.y,
 	};
@@ -60,3 +66,6 @@ void RenderSystem::RenderEntity( Entity entity, SDL_Renderer* renderer, const As
 		SDL_FLIP_NONE
 	);
 }
+
+float RenderSystem::xOffset{ 0.0f };
+float RenderSystem::yOffset{ 0.0f };

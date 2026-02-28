@@ -15,6 +15,7 @@
 #include <iostream>
 #include <cstdio>
 #include <format>
+#include <algorithm>
 
 Game::Game()
 {
@@ -121,8 +122,20 @@ void Game::Setup()
 	truck.AddComponent<RigidBodyComponent>( glm::vec2( 0.0f, 180.0f ) );
 	truck.AddComponent<SpriteComponent>( "truck-image", 32.0f, 32.0f, 1u, 0.0f, 0.0f );
 
-	std::vector<Tile> tiles = Utils::GetTilesFromMapFile( "./assets/tilemaps/jungle.map" );
-	for ( Tile tile : tiles )
+	Map map = Utils::LoadMapFromFile( "./assets/tilemaps/jungle.map" );
+	const SDL_DisplayMode* displayMode = SDL_GetCurrentDisplayMode( SDL_GetDisplayForWindow( window ) );
+	if ( !displayMode )
+	{
+		Logger::Error( "Error getting display mode" );
+		return;
+	}
+
+	RenderSystem::SetOffsets(
+		static_cast<float>( std::max( displayMode->w / 2 - map.size.x / 2, 0 ) ),
+		static_cast<float>( std::max( displayMode->h / 2 - map.size.y / 2, 0 ) )
+	);
+
+	for ( Tile tile : map.tiles )
 	{
 		Entity tileEntity = registry->CreateEntity();
 		tileEntity.AddComponent<TransformComponent>( static_cast<glm::vec2>( tile.position ), glm::vec2( Tile::scale, Tile::scale ), 0.0 );

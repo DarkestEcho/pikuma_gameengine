@@ -2,6 +2,7 @@
 #include <bitset>
 #include <stdint.h>
 #include <glm/glm.hpp>
+#include <vector>
 
 const uint8_t MAX_COMPONENTS = 32;
 const uint8_t Z_INDEX_LIMIT = 32;
@@ -15,4 +16,10 @@ struct Tile
 
 	static glm::u8vec2 size;
 	static float scale;
+};
+
+struct Map
+{
+	std::vector<Tile> tiles;
+	glm::u16vec2 size;
 };

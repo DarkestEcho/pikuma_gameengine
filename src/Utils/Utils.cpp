@@ -15,7 +15,7 @@ std::string Utils::GetCurrentDateTimeString()
 	return dateTime;
 }
 
-std::vector<Tile> Utils::GetTilesFromMapFile( std::string_view filePath )
+Map Utils::LoadMapFromFile( std::string_view filePath )
 {
 	std::ifstream mapFile( filePath.data() );
 	if ( !mapFile.is_open() )
@@ -47,17 +47,19 @@ std::vector<Tile> Utils::GetTilesFromMapFile( std::string_view filePath )
 		", scale: " + std::to_string( Tile::scale ) );
 
 	std::vector<Tile> tiles;
+	glm::u16vec2 size;
 
-	uint16_t y = 0;
+	uint16_t y = 0u;
+	uint16_t x = 0u;
 
 	while ( std::getline( mapFile, line ) )
 	{
 		//TODO - Output values
 		ss.str( line );
 		ss.clear();
-		std::string cell;
-		uint16_t x = 0;
+		x = 0u;
 
+		std::string cell;
 		while ( std::getline( ss, cell, ',' ) )
 		{
 			tiles.emplace_back(
@@ -68,10 +70,13 @@ std::vector<Tile> Utils::GetTilesFromMapFile( std::string_view filePath )
 		}
 		y++;
 	}
-
 	mapFile.close();
 
-	return tiles;
+	size.x = x * Tile::size.x * Tile::scale;
+	size.y = y * Tile::size.y * Tile::scale;
+
+
+	return { tiles, size };
 }
 
 void Utils::CheckIsZIndexCorrect( uint8_t zIndex )
