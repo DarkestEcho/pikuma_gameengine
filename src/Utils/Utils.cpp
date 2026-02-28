@@ -32,13 +32,10 @@ Map Utils::LoadMapFromFile( std::string_view filePath )
 
 	//FIXME - Need some validation for map file before any actions
 
-	unsigned int tempUint;
 	//---> Fill basic Tile info
-	ss >> tempUint;
-	Tile::size.x = tempUint;
+	ss >> Tile::size.x;
 	ss.ignore();
-	ss >> tempUint;
-	Tile::size.y = tempUint;
+	ss >> Tile::size.y;
 	ss.ignore();
 	ss >> Tile::scale;
 
@@ -64,7 +61,7 @@ Map Utils::LoadMapFromFile( std::string_view filePath )
 		{
 			tiles.emplace_back(
 				glm::u16vec2( static_cast<uint16_t>( x * Tile::size.x * Tile::scale ), static_cast<uint16_t>( y * Tile::size.y * Tile::scale ) ),
-				glm::u8vec2( static_cast<uint8_t>( cell[1] - '0' ), static_cast<uint8_t>( cell[0] - '0' ) )
+				glm::u16vec2( static_cast<uint16_t>( cell[1] - '0' ), static_cast<uint16_t>( cell[0] - '0' ) )
 			);
 			x++;
 		}
