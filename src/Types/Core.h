@@ -3,7 +3,9 @@
 #include <stdint.h>
 #include <glm/glm.hpp>
 
-const size_t MAX_COMPONENTS = 32;
+const uint8_t MAX_COMPONENTS = 32;
+const uint8_t Z_INDEX_LIMIT = 32;
+
 typedef std::bitset<MAX_COMPONENTS> Signature;
 
 struct Tile

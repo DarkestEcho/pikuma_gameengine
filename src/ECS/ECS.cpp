@@ -42,24 +42,24 @@ std::ostream& Entity::operator<<( std::ostream& os )
 
 Registry* Entity::registry = nullptr;
 
-void Entity::SetRegistry(Registry* newRegistry)
+void Entity::SetRegistry( Registry* newRegistry )
 {
 	registry = newRegistry;
 }
 
 
-void System::AddEntityToSystem( Entity entity )
+void System::AddEntityToSystem( const Entity& entity )
 {
 	entities.push_back( entity );
 }
 
-void System::RemoveAllEntityEntriesFromSystem( Entity entity )
+void System::RemoveAllEntityEntriesFromSystem( const Entity& entity )
 {
 	std::vector<Entity>::iterator newEndIt = std::remove( entities.begin(), entities.end(), entity );
 	entities.erase( newEndIt, entities.end() );
 }
 
-void System::RemoveEntityFromSystem( Entity entity )
+void System::RemoveEntityFromSystem( const Entity& entity )
 {
 	std::vector<Entity>::iterator it = std::find( entities.begin(), entities.end(), entity );
 	if ( it != entities.end() )
@@ -94,7 +94,7 @@ Entity Registry::CreateEntity()
 	return entity;
 }
 
-void Registry::AddEntityToSystems( Entity entity )
+void Registry::AddEntityToSystems( const Entity& entity )
 {
 	const size_t entityId = entity.GetId();
 	const Signature& entityComponentSignature = entityComponentSignatures[entityId];

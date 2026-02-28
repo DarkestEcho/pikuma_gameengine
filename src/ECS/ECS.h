@@ -55,10 +55,10 @@ public:
 	void RemoveComponent();
 
 	template<typename TComponent>
-	bool HasComponent();
+	bool HasComponent() const;
 
 	template<typename TComponent>
-	TComponent& GetComponent();
+	TComponent& GetComponent() const;
 };
 
 
@@ -78,13 +78,13 @@ public:
 	System() = default;
 	virtual ~System() = default;
 
-	void AddEntityToSystem( Entity entity );
+	virtual void AddEntityToSystem( const Entity& entity );
 
-	void RemoveAllEntityEntriesFromSystem( Entity entity );
+	virtual void RemoveAllEntityEntriesFromSystem( const Entity& entity );
 
-	void RemoveEntityFromSystem( Entity entity );
+	virtual void RemoveEntityFromSystem( const Entity& entity );
 
-	const std::vector<Entity>& GetSystemEntities() const;
+	virtual const std::vector<Entity>& GetSystemEntities() const;
 
 	const Signature& GetComponentSignature() const;
 };
@@ -117,8 +117,6 @@ public:
 
 	void KillEntity( Entity entity );
 
-	void AddEntityToSystem( Entity entity );
-
 	template<typename TComponent, typename ...TArgs>
 	void AddComponent( Entity entity, TArgs&& ...args );
 
@@ -144,7 +142,7 @@ public:
 	template<typename TSystem>
 	TSystem& GetSystem();
 
-	void AddEntityToSystems( Entity entity );
+	void AddEntityToSystems( const Entity& entity );
 };
 
 
@@ -242,13 +240,13 @@ void Entity::RemoveComponent()
 }
 
 template<typename TComponent>
-bool Entity::HasComponent()
+bool Entity::HasComponent() const
 {
 	return Entity::registry->HasComponent<TComponent>( *this );
 }
 
 template<typename TComponent>
-TComponent& Entity::GetComponent()
+TComponent& Entity::GetComponent() const
 {
 	return Entity::registry->GetComponent<TComponent>( *this );
 }

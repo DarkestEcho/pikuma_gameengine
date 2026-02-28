@@ -73,3 +73,17 @@ std::vector<Tile> Utils::GetTilesFromMapFile( std::string_view filePath )
 
 	return tiles;
 }
+
+void Utils::CheckIsZIndexCorrect( uint8_t zIndex )
+{
+	if ( zIndex >= Z_INDEX_LIMIT )
+	{
+		std::string message{
+			"Z-Index: " + std::to_string( zIndex ) +
+			" bigger than max Z-Index: " + std::to_string( Z_INDEX_LIMIT - 1u )
+		};
+
+		Logger::Error( "UTILS::" + message );
+		throw std::out_of_range( message );
+	}
+}

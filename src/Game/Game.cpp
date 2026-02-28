@@ -111,23 +111,23 @@ void Game::Setup()
 	assetStore->AddTexture( renderer, "truck-image", "./assets/images/truck-ford-right.png" );
 	assetStore->AddTexture( renderer, "tilemap_image", "./assets/images/jungle.png" );
 
+	Entity tank = registry->CreateEntity();
+	tank.AddComponent<TransformComponent>( glm::vec2( 10.0f, 30.0f ), glm::vec2( 1.0f, 1.0f ), 0.0 );
+	tank.AddComponent<RigidBodyComponent>( glm::vec2( 80.0f, 0.0f ) );
+	tank.AddComponent<SpriteComponent>( "tank-image", 32.0f, 32.0f, 2u, 0.0f, 0.0f );
+
+	Entity truck = registry->CreateEntity();
+	truck.AddComponent<TransformComponent>( glm::vec2( 20.0f, 80.0f ), glm::vec2( 1.0f, 1.0f ), 0.0 );
+	truck.AddComponent<RigidBodyComponent>( glm::vec2( 0.0f, 180.0f ) );
+	truck.AddComponent<SpriteComponent>( "truck-image", 32.0f, 32.0f, 1u, 0.0f, 0.0f );
+
 	std::vector<Tile> tiles = Utils::GetTilesFromMapFile( "./assets/tilemaps/jungle.map" );
 	for ( Tile tile : tiles )
 	{
 		Entity tileEntity = registry->CreateEntity();
 		tileEntity.AddComponent<TransformComponent>( static_cast<glm::vec2>( tile.position ), glm::vec2( Tile::scale, Tile::scale ), 0.0 );
-		tileEntity.AddComponent<SpriteComponent>( "tilemap_image", Tile::size.x, Tile::size.y, tile.source.x * Tile::size.x, tile.source.y * Tile::size.y );
+		tileEntity.AddComponent<SpriteComponent>( "tilemap_image", Tile::size.x, Tile::size.y, 0u, tile.source.x * Tile::size.x, tile.source.y * Tile::size.y );
 	}
-
-	Entity tank = registry->CreateEntity();
-	tank.AddComponent<TransformComponent>( glm::vec2( 10.0f, 30.0f ), glm::vec2( 1.0f, 1.0f ), 0.0 );
-	tank.AddComponent<RigidBodyComponent>( glm::vec2( 80.0f, 0.0f ) );
-	tank.AddComponent<SpriteComponent>( "tank-image", 32.0f, 32.0f, 0.0f, 0.0f );
-
-	Entity truck = registry->CreateEntity();
-	truck.AddComponent<TransformComponent>( glm::vec2( 20.0f, 80.0f ), glm::vec2( 1.0f, 1.0f ), 0.0 );
-	truck.AddComponent<RigidBodyComponent>( glm::vec2( 0.0f, 180.0f ) );
-	truck.AddComponent<SpriteComponent>( "truck-image", 32.0f, 32.0f, 0.0f, 0.0f );
 
 	Logger::Log( "Game::Setup::Completed" );
 }
