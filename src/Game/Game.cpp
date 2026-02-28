@@ -5,8 +5,10 @@
 #include <Components/TransformComponent.h>
 #include <Components/RigidBodyComponent.h>
 #include <Components/SpriteComponent.h>
+#include <Components/AnimationComponent.h>
 #include <Systems/MovementSystem.h>
 #include <Systems/RenderSystem.h>
+#include <Systems/AnimationSystem.h>
 
 #include <SDL3/SDL.h>
 #include <SDL3_image/SDL_image.h>
@@ -100,6 +102,12 @@ void Game::Run()
 
 void Game::Setup()
 {
+	const SDL_DisplayMode* displayMode = SDL_GetCurrentDisplayMode( SDL_GetDisplayForWindow( window ) );
+	if ( !displayMode )
+	{
+		Logger::Error( "Error getting display mode" );
+		return;
+	}
 	// TODO: Create entities and components
 	// Entity tank = registry.CreateEntity();
 	// tank.AddComponent<TransformComponent>();
@@ -107,28 +115,38 @@ void Game::Setup()
 	// tank.AddComponent<SpriteComponent>("./assets/images/tank-tiger-right.png");
 	registry->AddSystem<MovementSystem>();
 	registry->AddSystem<RenderSystem>();
+	registry->AddSystem<AnimationSystem>();
 
+	assetStore->AddTexture( renderer, "chopper-image", "./assets/images/chopper.png" );
 	assetStore->AddTexture( renderer, "tank-image", "./assets/images/tank-panther-right.png" );
 	assetStore->AddTexture( renderer, "truck-image", "./assets/images/truck-ford-right.png" );
+	assetStore->AddTexture( renderer, "radar-image", "./assets/images/radar.png" );
 	assetStore->AddTexture( renderer, "tilemap_image", "./assets/images/jungle.png" );
 
-	Entity tank = registry->CreateEntity();
-	tank.AddComponent<TransformComponent>( glm::vec2( 10.0f, 30.0f ), glm::vec2( 1.0f, 1.0f ), 0.0 );
-	tank.AddComponent<RigidBodyComponent>( glm::vec2( 80.0f, 0.0f ) );
-	tank.AddComponent<SpriteComponent>( "tank-image", 32.0f, 32.0f, 2u, 0.0f, 0.0f );
+	Entity chopper = registry->CreateEntity();
+	chopper.AddComponent<TransformComponent>( glm::vec2( 10.0f, 30.0f ), glm::vec2( 1.0f, 1.0f ), 0.0 );
+	chopper.AddComponent<RigidBodyComponent>( glm::vec2( 0.0f, 0.0f ) );
+	chopper.AddComponent<SpriteComponent>( "chopper-image", 32.0f, 32.0f, 3u, 0.0f, 0.0f );
+	chopper.AddComponent<AnimationComponent>( 2u, 0u, 10u, true );
 
-	Entity truck = registry->CreateEntity();
-	truck.AddComponent<TransformComponent>( glm::vec2( 20.0f, 80.0f ), glm::vec2( 1.0f, 1.0f ), 0.0 );
-	truck.AddComponent<RigidBodyComponent>( glm::vec2( 0.0f, 180.0f ) );
-	truck.AddComponent<SpriteComponent>( "truck-image", 32.0f, 32.0f, 1u, 0.0f, 0.0f );
+	/*
+		Entity tank = registry->CreateEntity();
+		tank.AddComponent<TransformComponent>( glm::vec2( 10.0f, 30.0f ), glm::vec2( 1.0f, 1.0f ), 0.0 );
+		tank.AddComponent<RigidBodyComponent>( glm::vec2( 80.0f, 0.0f ) );
+		tank.AddComponent<SpriteComponent>( "tank-image", 32.0f, 32.0f, 2u, 0.0f, 0.0f );
 
+		Entity truck = registry->CreateEntity();
+		truck.AddComponent<TransformComponent>( glm::vec2( 20.0f, 80.0f ), glm::vec2( 1.0f, 1.0f ), 0.0 );
+		truck.AddComponent<RigidBodyComponent>( glm::vec2( 0.0f, 180.0f ) );
+		truck.AddComponent<SpriteComponent>( "truck-image", 32.0f, 32.0f, 1u, 0.0f, 0.0f );
+	*/
 	Map map = Utils::LoadMapFromFile( "./assets/tilemaps/jungle.map" );
-	const SDL_DisplayMode* displayMode = SDL_GetCurrentDisplayMode( SDL_GetDisplayForWindow( window ) );
-	if ( !displayMode )
-	{
-		Logger::Error( "Error getting display mode" );
-		return;
-	}
+
+	Entity radar = registry->CreateEntity();
+	radar.AddComponent<TransformComponent>( glm::vec2( static_cast<float>( map.size.x ) - 84.0f, 20.0f ), glm::vec2( 1.0f, 1.0f ), 0.0 );
+	radar.AddComponent<RigidBodyComponent>( glm::vec2( 0.0f, 0.0f ) );
+	radar.AddComponent<SpriteComponent>( "radar-image", 64.0f, 64.0f, 4u, 0.0f, 0.0f );
+	radar.AddComponent<AnimationComponent>( 8u, 0u, 5u, true );
 
 	RenderSystem::SetOffsets(
 		static_cast<float>( std::max( displayMode->w / 2 - map.size.x / 2, 0 ) ),
@@ -138,8 +156,19 @@ void Game::Setup()
 	for ( Tile tile : map.tiles )
 	{
 		Entity tileEntity = registry->CreateEntity();
-		tileEntity.AddComponent<TransformComponent>( static_cast<glm::vec2>( tile.position ), glm::vec2( Tile::scale, Tile::scale ), 0.0 );
-		tileEntity.AddComponent<SpriteComponent>( "tilemap_image", Tile::size.x, Tile::size.y, 0u, tile.source.x * Tile::size.x, tile.source.y * Tile::size.y );
+		tileEntity.AddComponent<TransformComponent>(
+			static_cast<glm::vec2>( tile.position ),
+			glm::vec2( Tile::scale, Tile::scale ),
+			0.0
+		);
+		tileEntity.AddComponent<SpriteComponent>(
+			"tilemap_image",
+			static_cast<float>( Tile::size.x ),
+			static_cast<float>( Tile::size.y ),
+			0u,
+			static_cast<float>( tile.source.x * Tile::size.x ),
+			static_cast<float>( tile.source.y * Tile::size.y )
+		);
 	}
 
 	Logger::Log( "Game::Setup::Completed" );
@@ -187,6 +216,7 @@ void Game::Update()
 	millisecsPreviousFrame = SDL_GetTicks();
 
 	registry->GetSystem<MovementSystem>().Update( deltaTime );
+	registry->GetSystem<AnimationSystem>().Update();
 
 	registry->Update();
 }
