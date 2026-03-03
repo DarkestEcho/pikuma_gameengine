@@ -13,7 +13,7 @@ private:
 
 public:
 	RenderSystem();
-	void Update( class SDL_Renderer* renderer, const AssetStore& assetStore );
+	void Update( class SDL_Renderer* renderer, const AssetStore& assetStore ) const;
 	static void SetOffsets( float x, float y );
 
 	virtual void AddEntityToSystem( const Entity& entity ) override;

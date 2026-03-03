@@ -12,7 +12,7 @@ RenderSystem::RenderSystem()
 	RequireComponent<SpriteComponent>();
 }
 
-void RenderSystem::Update( SDL_Renderer* renderer, const AssetStore& assetStore )
+void RenderSystem::Update( SDL_Renderer* renderer, const AssetStore& assetStore ) const
 {
 	for ( std::vector<Entity> entities : renderEntities )
 	{

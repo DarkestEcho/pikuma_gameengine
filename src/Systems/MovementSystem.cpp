@@ -6,7 +6,7 @@ MovementSystem::MovementSystem()
 	RequireComponent<RigidBodyComponent>();
 }
 
-void MovementSystem::Update( float deltaTime )
+void MovementSystem::Update( float deltaTime ) const
 {
 	for ( Entity entity : GetSystemEntities() )
 	{

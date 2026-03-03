@@ -8,5 +8,5 @@ class MovementSystem : public System
 {
 public:
 	MovementSystem();
-	void Update( float deltaTime );
+	void Update( float deltaTime ) const;
 };

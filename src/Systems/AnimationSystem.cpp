@@ -14,7 +14,7 @@ AnimationSystem::~AnimationSystem()
 {
 }
 
-void AnimationSystem::Update()
+void AnimationSystem::Update() const
 {
 	for ( Entity entity : GetSystemEntities() )
 	{

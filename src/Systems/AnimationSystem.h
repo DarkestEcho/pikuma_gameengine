@@ -8,5 +8,5 @@ public:
 	AnimationSystem();
 	~AnimationSystem();
 
-	void Update();
+	void Update() const;
 };
