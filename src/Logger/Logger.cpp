@@ -6,35 +6,57 @@
 #include <format>
 #include <unordered_map>
 
-std::vector<LogEntry> Logger::messages;
 
-const std::unordered_map <LogType, std::string> logTypeToString{
-	{LogType::Info, "LOG::"},
-	{LogType::Warning, "WARNING::"},
-	{LogType::Error, "ERROR::"},
+std::vector<LogEntry> Logger::messages;
+bool Logger::isEnabled = true;
+
+const std::unordered_map <LogType, std::string> logTypeToString
+{
+	{ LogType::Info, "LOG::" },
+	{ LogType::Warning, "WARNING::" },
+	{ LogType::Error, "ERROR::" },
 };
 
-const LogEntry& Logger::AddLogEntry( const std::string& message, LogType logType )
+const std::unordered_map <LogType, std::string> logTypeToColor
 {
-	return messages.emplace_back(
+	{ LogType::Info, "\033[32m" },
+	{ LogType::Warning, "\033[33m" },
+	{ LogType::Error, "\033[31m" },
+};
+
+
+void Logger::AddLogEntry( const std::string& message, LogType logType )
+{
+	if ( !isEnabled )
+	{
+		return;
+	}
+
+	const LogEntry& logEntry = messages.emplace_back(
 		logType,
-		std::string( "[" + Utils::GetCurrentDateTimeString() + "]::" + logTypeToString.at( logType ) + message ) );
+		std::string( "[" + Utils::GetCurrentDateTimeString() + "]::" + logTypeToString.at( logType ) + message )
+	);
+
+	std::cout << logTypeToColor.at( logType ) << logEntry.message << "\033[0m" << std::endl;
 }
 
 void Logger::Log( const std::string& message )
 {
-	const LogEntry& logEntry = AddLogEntry( message, LogType::Info );
-	std::cout << "\033[32m" << logEntry.message << "\033[0m" << std::endl;
+	AddLogEntry( message, LogType::Info );
 }
 
 void Logger::Warning( const std::string& message )
 {
-	const LogEntry& logEntry = AddLogEntry( message, LogType::Warning );
-	std::cout << "\033[33m" << logEntry.message << "\033[0m" << std::endl;
+	AddLogEntry( message, LogType::Warning );
 }
 
 void Logger::Error( const std::string& message )
 {
-	const LogEntry& logEntry = AddLogEntry( message, LogType::Error );
-	std::cout << "\033[31m" << logEntry.message << "\033[0m" << std::endl;
+	AddLogEntry( message, LogType::Error );
+}
+
+void Logger::SetLoggerEnabled( bool isEnabled )
+{
+	Logger::isEnabled = isEnabled;
+	Warning( "LOGGER::ENABLED:" + std::to_string( isEnabled ) );
 }

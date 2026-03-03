@@ -161,6 +161,7 @@ void Game::Setup()
 		static_cast<float>( std::max( displayMode->h / 2 - map.size.y / 2, 0 ) )
 	);
 
+	Logger::SetLoggerEnabled( false );
 	for ( Tile tile : map.tiles )
 	{
 		Entity tileEntity = registry->CreateEntity();
@@ -178,6 +179,7 @@ void Game::Setup()
 			static_cast<float>( tile.source.y * Tile::size.y )
 		);
 	}
+	Logger::SetLoggerEnabled( true );
 
 	Logger::Log( "Game::Setup::Completed" );
 }
