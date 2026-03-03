@@ -6,9 +6,13 @@
 #include <Components/RigidBodyComponent.h>
 #include <Components/SpriteComponent.h>
 #include <Components/AnimationComponent.h>
+#include <Components/BoxColliderComponent.h>
 #include <Systems/MovementSystem.h>
 #include <Systems/RenderSystem.h>
 #include <Systems/AnimationSystem.h>
+#include <Systems/CollisionSystem.h>
+
+#include <Tests/Tests.h>
 
 #include <SDL3/SDL.h>
 #include <SDL3_image/SDL_image.h>
@@ -102,6 +106,8 @@ void Game::Run()
 
 void Game::Setup()
 {
+	Tests::TestAll();
+
 	const SDL_DisplayMode* displayMode = SDL_GetCurrentDisplayMode( SDL_GetDisplayForWindow( window ) );
 	if ( !displayMode )
 	{
@@ -116,6 +122,7 @@ void Game::Setup()
 	registry->AddSystem<MovementSystem>();
 	registry->AddSystem<RenderSystem>();
 	registry->AddSystem<AnimationSystem>();
+	registry->AddSystem<CollisionSystem>();
 
 	assetStore->AddTexture( renderer, "chopper-image", "./assets/images/chopper.png" );
 	assetStore->AddTexture( renderer, "tank-image", "./assets/images/tank-panther-right.png" );
@@ -129,17 +136,18 @@ void Game::Setup()
 	chopper.AddComponent<SpriteComponent>( "chopper-image", 32.0f, 32.0f, 3u, 0.0f, 0.0f );
 	chopper.AddComponent<AnimationComponent>( 2u, 0u, 10u, true );
 
-	/*
-		Entity tank = registry->CreateEntity();
-		tank.AddComponent<TransformComponent>( glm::vec2( 10.0f, 30.0f ), glm::vec2( 1.0f, 1.0f ), 0.0 );
-		tank.AddComponent<RigidBodyComponent>( glm::vec2( 80.0f, 0.0f ) );
-		tank.AddComponent<SpriteComponent>( "tank-image", 32.0f, 32.0f, 2u, 0.0f, 0.0f );
+	Entity tank = registry->CreateEntity();
+	tank.AddComponent<TransformComponent>( glm::vec2( 500.0f, 100.0f ), glm::vec2( 1.0f, 1.0f ), 0.0 );
+	tank.AddComponent<RigidBodyComponent>( glm::vec2( -40.0f, 0.0f ) );
+	tank.AddComponent<SpriteComponent>( "tank-image", 32.0f, 32.0f, 2u, 0.0f, 0.0f );
+	tank.AddComponent<BoxColliderComponent>( glm::vec2( 32.0f, 32.0f ), glm::vec2( 0.0f ) );
 
-		Entity truck = registry->CreateEntity();
-		truck.AddComponent<TransformComponent>( glm::vec2( 20.0f, 80.0f ), glm::vec2( 1.0f, 1.0f ), 0.0 );
-		truck.AddComponent<RigidBodyComponent>( glm::vec2( 0.0f, 180.0f ) );
-		truck.AddComponent<SpriteComponent>( "truck-image", 32.0f, 32.0f, 1u, 0.0f, 0.0f );
-	*/
+	Entity truck = registry->CreateEntity();
+	truck.AddComponent<TransformComponent>( glm::vec2( 20.0f, 100.0f ), glm::vec2( 1.0f, 1.0f ), 0.0 );
+	truck.AddComponent<RigidBodyComponent>( glm::vec2( 50.0f, 0.0f ) );
+	truck.AddComponent<SpriteComponent>( "truck-image", 32.0f, 32.0f, 1u, 0.0f, 0.0f );
+	truck.AddComponent<BoxColliderComponent>( glm::vec2( 32.0f, 32.0f ), glm::vec2( 0.0f ) );
+
 	Map map = Utils::LoadMapFromFile( "./assets/tilemaps/jungle.map" );
 
 	Entity radar = registry->CreateEntity();
@@ -217,6 +225,7 @@ void Game::Update()
 
 	registry->GetSystem<MovementSystem>().Update( deltaTime );
 	registry->GetSystem<AnimationSystem>().Update();
+	registry->GetSystem<CollisionSystem>().Update();
 
 	registry->Update();
 }
