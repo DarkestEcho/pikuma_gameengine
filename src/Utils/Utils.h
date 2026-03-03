@@ -13,4 +13,5 @@ public:
 
 	static void CheckIsZIndexCorrect( uint8_t zIndex );
 
+	static bool CheckAABBCollision( CollisionBox aBox, CollisionBox bBox );
 };

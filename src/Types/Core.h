@@ -24,3 +24,9 @@ struct Map
 	std::vector<Tile> tiles;
 	glm::u16vec2 size;
 };
+
+struct CollisionBox
+{
+	glm::vec2 min{ 0.0f };
+	glm::vec2 max{ 0.0f };
+};

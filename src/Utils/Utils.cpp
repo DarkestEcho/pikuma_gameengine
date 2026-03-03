@@ -1,5 +1,6 @@
 #include "Utils.h"
 #include <Logger/Logger.h>
+#include <glm/glm.hpp>
 #include <chrono>
 #include <fstream>
 #include <stdexcept>
@@ -88,4 +89,12 @@ void Utils::CheckIsZIndexCorrect( uint8_t zIndex )
 		Logger::Error( "UTILS::" + message );
 		throw std::out_of_range( message );
 	}
+}
+
+
+bool Utils::CheckAABBCollision( CollisionBox aBox, CollisionBox bBox )
+{
+	// Just for fun
+	glm::bvec2 res = ( glm::lessThan( aBox.min, bBox.max ) & glm::lessThan( bBox.min, aBox.max ) );
+	return res.x & res.y;
 }
