@@ -7,19 +7,19 @@ CollisionBox ECSUtils::GetCollisionBoxForEntity( Entity entity )
 		return {};
 	}
 
-	TransformComponent entityTransform = entity.GetComponent<TransformComponent>();
-	BoxColliderComponent entityBoxCollider = entity.GetComponent<BoxColliderComponent>();
+	const TransformComponent& transformComponent = entity.GetComponent<TransformComponent>();
+	const BoxColliderComponent& boxColliderComponent = entity.GetComponent<BoxColliderComponent>();
 
-	glm::vec2 entityCollisionStart = entityTransform.position + entityBoxCollider.offset;
-	glm::vec2 entityCollisionEnd = entityCollisionStart + entityBoxCollider.size;
+	glm::vec2 collisionStart = transformComponent.position + boxColliderComponent.offset;
+	glm::vec2 collisionEnd = collisionStart + boxColliderComponent.size;
 
-	return { entityCollisionStart, entityCollisionEnd };
+	return { collisionStart, collisionEnd };
 }
 
 CollisionBox ECSUtils::GetCollisionBoxForComponents( const TransformComponent& transformComponent, const BoxColliderComponent& boxColliderComponent )
 {
-	glm::vec2 entityCollisionStart = transformComponent.position + boxColliderComponent.offset;
-	glm::vec2 entityCollisionEnd = entityCollisionStart + boxColliderComponent.size;
+	glm::vec2 collisionStart = transformComponent.position + boxColliderComponent.offset;
+	glm::vec2 collisionEnd = collisionStart + boxColliderComponent.size;
 
-	return { entityCollisionStart, entityCollisionEnd };
+	return { collisionStart, collisionEnd };
 }
