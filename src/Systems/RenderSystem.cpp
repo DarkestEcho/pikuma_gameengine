@@ -5,6 +5,8 @@
 #include <SDL3/SDL.h>
 #include <Types/Core.h>
 
+glm::vec2 RenderSystem::offset{ 0.0f };
+
 RenderSystem::RenderSystem()
 {
 	renderEntities.resize( Z_INDEX_LIMIT );
@@ -23,10 +25,14 @@ void RenderSystem::Update( SDL_Renderer* renderer, const AssetStore& assetStore 
 	}
 }
 
-void RenderSystem::SetOffsets( float x, float y )
+void RenderSystem::SetOffset( float x, float y )
 {
-	xOffset = x;
-	yOffset = y;
+	offset = glm::vec2( x, y );
+}
+
+glm::vec2 RenderSystem::GetOffset()
+{
+	return offset;
 }
 
 void RenderSystem::AddEntityToSystem( const Entity& entity )
@@ -50,8 +56,8 @@ void RenderSystem::RenderEntity( Entity entity, SDL_Renderer* renderer, const As
 	};
 
 	SDL_FRect distanationRectangle{
-		transform.position.x + xOffset,
-		transform.position.y + yOffset,
+		transform.position.x + offset.x,
+		transform.position.y + offset.y,
 		spriteComponent.width * transform.scale.x,
 		spriteComponent.height * transform.scale.y,
 	};
@@ -66,6 +72,3 @@ void RenderSystem::RenderEntity( Entity entity, SDL_Renderer* renderer, const As
 		SDL_FLIP_NONE
 	);
 }
-
-float RenderSystem::xOffset{ 0.0f };
-float RenderSystem::yOffset{ 0.0f };
