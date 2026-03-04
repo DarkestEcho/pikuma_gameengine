@@ -4,9 +4,9 @@
 #include <glm/glm.hpp>
 #include <vector>
 
-const uint8_t MAX_COMPONENTS = 32;
-const uint8_t Z_INDEX_LIMIT = 32;
-const uint16_t MS_IN_SEC = 1000;
+constexpr uint8_t MAX_COMPONENTS = 32;
+constexpr uint8_t Z_INDEX_LIMIT = 32;
+constexpr uint16_t MS_IN_SEC = 1000;
 
 typedef std::bitset<MAX_COMPONENTS> Signature;
 
