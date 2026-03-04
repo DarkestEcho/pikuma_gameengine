@@ -32,6 +32,11 @@ void Logger::AddLogEntry( const std::string& message, LogType logType )
 		return;
 	}
 
+	AddLogEntryForce( message, logType );
+}
+
+void Logger::AddLogEntryForce( const std::string& message, LogType logType )
+{
 	const LogEntry& logEntry = messages.emplace_back(
 		logType,
 		std::string( "[" + Utils::GetCurrentDateTimeString() + "]::" + logTypeToString.at( logType ) + message )
@@ -57,6 +62,6 @@ void Logger::Error( const std::string& message )
 
 void Logger::SetLoggerEnabled( bool isEnabled )
 {
+	AddLogEntryForce( "LOGGER::ENABLED:" + std::to_string( isEnabled ), LogType::Warning );
 	Logger::isEnabled = isEnabled;
-	Warning( "LOGGER::ENABLED:" + std::to_string( isEnabled ) );
 }

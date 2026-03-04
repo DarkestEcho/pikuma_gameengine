@@ -22,6 +22,7 @@ private:
 	static std::vector<LogEntry> messages;
 	static bool isEnabled;
 	static void AddLogEntry( const std::string& message, LogType logType );
+	static void AddLogEntryForce( const std::string& message, LogType logType );
 
 public:
 	static void Log( const std::string& message );
