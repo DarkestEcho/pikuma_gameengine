@@ -1,5 +1,4 @@
 #include "SDLUtils.h"
-#include <SDL3/SDL.h>
 
 bool SDLUtils::InitEverythingPC()
 {
@@ -12,4 +11,15 @@ bool SDLUtils::InitEverythingPC()
 		SDL_Init( SDL_INIT_EVENTS );
 
 	return result;
+}
+
+void SDLUtils::RenderColorRect( SDL_Renderer* renderer, SDL_FRect rect, SDL_Color color )
+{
+	SetRenderDrawColor( renderer, color );
+	SDL_RenderRect( renderer, &rect );
+}
+
+void SDLUtils::SetRenderDrawColor( SDL_Renderer* renderer, SDL_Color color )
+{
+	SDL_SetRenderDrawColor( renderer, color.r, color.g, color.b, color.a );
 }
