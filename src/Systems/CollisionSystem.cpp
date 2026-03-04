@@ -3,6 +3,7 @@
 #include <Components/BoxColliderComponent.h>
 #include <Utils/Utils.h>
 #include <Utils/ECSUtils.h>
+#include <Types/Colors.h>
 #include <glm/glm.hpp>
 
 CollisionSystem::CollisionSystem()
@@ -33,7 +34,14 @@ void CollisionSystem::Update()
 
 			if ( hasCollision )
 			{
-				Logger::Log( "COLLISION::Entity:Id:" + std::to_string( entityIt->GetId() ) + " with Entity:Id:" + std::to_string( comparedEntityIt->GetId() ) );
+				comparedEntityIt->GetComponent<BoxColliderComponent>().color = Colors::COLLIDER_INTERSECT;
+				entityIt->GetComponent<BoxColliderComponent>().color = Colors::COLLIDER_INTERSECT;
+				//Logger::Log( "COLLISION::Entity:Id:" + std::to_string( entityIt->GetId() ) + " with Entity:Id:" + std::to_string( comparedEntityIt->GetId() ) );
+			}
+			else
+			{
+				comparedEntityIt->GetComponent<BoxColliderComponent>().color = Colors::COLLIDER_DEFAULT;
+				entityIt->GetComponent<BoxColliderComponent>().color = Colors::COLLIDER_DEFAULT;
 			}
 		}
 	}

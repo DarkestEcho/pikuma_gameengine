@@ -11,6 +11,7 @@
 #include <Systems/RenderSystem.h>
 #include <Systems/AnimationSystem.h>
 #include <Systems/CollisionSystem.h>
+#include <Systems/RenderColliderSystem.h>
 
 #include <Tests/Tests.h>
 
@@ -123,6 +124,7 @@ void Game::Setup()
 	registry->AddSystem<RenderSystem>();
 	registry->AddSystem<AnimationSystem>();
 	registry->AddSystem<CollisionSystem>();
+	registry->AddSystem<RenderColliderSystem>();
 
 	assetStore->AddTexture( renderer, "chopper-image", "./assets/images/chopper.png" );
 	assetStore->AddTexture( renderer, "tank-image", "./assets/images/tank-panther-right.png" );
@@ -156,7 +158,7 @@ void Game::Setup()
 	radar.AddComponent<SpriteComponent>( "radar-image", 64.0f, 64.0f, 4u, 0.0f, 0.0f );
 	radar.AddComponent<AnimationComponent>( 8u, 0u, 5u, true );
 
-	RenderSystem::SetOffsets(
+	RenderSystem::SetOffset(
 		static_cast<float>( std::max( displayMode->w / 2 - map.size.x / 2, 0 ) ),
 		static_cast<float>( std::max( displayMode->h / 2 - map.size.y / 2, 0 ) )
 	);
@@ -200,6 +202,10 @@ void Game::ProcessInput()
 			{
 				isRunning = false;
 			}
+			if ( sdlEvent.key.scancode == SDL_SCANCODE_D )
+			{
+				isDebug = !isDebug;
+			}
 			break;
 
 		default:
@@ -238,6 +244,11 @@ void Game::Render()
 	SDL_RenderClear( renderer );
 
 	registry->GetSystem<RenderSystem>().Update( renderer, *assetStore );
+
+	if ( isDebug )
+	{
+		registry->GetSystem<RenderColliderSystem>().Update( renderer );
+	}
 	// TODO: Render game objects
 
 	SDL_RenderPresent( renderer );
